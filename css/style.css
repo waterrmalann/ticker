@@ -1,3 +1,21 @@
+:root {
+	--primary-clr: #f5f5f5; /* used for background */
+	--secondary-clr: #2E4052;
+	--accent-clr: #FFC857;
+	--primary-txt-clr: #212427;
+	--secondary-txt-clr: gray;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--primary-clr: #11151c;
+		--secondary-clr: #fff;
+		--accent-clr: #f93943;
+		--primary-txt-clr: #f5f5f5;
+		--secondary-txt-clr: #bfbdc1;
+	}
+}
+
 *, *::before, *::after {
 	box-sizing: border-box;
 }
@@ -7,7 +25,8 @@ html, body {
 	overflow-x: none;
 	padding: 0;
 	margin: 0;
-	background: #f5f5f5;
+	background: var(--primary-clr);
+	color: var(--primary-txt-clr);
 	font-family: 'Roboto Mono', sans-serif;
 }
 
@@ -16,7 +35,7 @@ html, body {
 }
 #lapTicker {
 	margin-top:0.5rem;
-	color: gray;
+	color: var(--secondary-txt-clr);
 }
 
 .dividing-line {
@@ -43,6 +62,10 @@ html, body {
 	height: 50vh;
 }
 
+.lap > :first-child > :first-child {
+	color: var(--secondary-clr);
+}
+
 .lap__item {
 	display: flex;
 	align-items: center;
@@ -59,7 +82,7 @@ main {
 }
 
 .controls {
-	background-color: #f6f6f6;
+	background-color: var(--primary-clr);
 	width: 100%;
 	position: fixed;
 	bottom: 0;
@@ -73,8 +96,8 @@ main {
 }
 
 .controls__button {
-	background: #FFC857;
-	color: #2E4052;
+	background: var(--accent-clr);
+	color: var(--secondary-clr);
 	border: none;
 	border-radius: 100%;
 	padding: 1rem;
@@ -84,8 +107,8 @@ main {
 
 .controls__button:hover {
 	cursor: pointer;
-	color: #FFC857;
-	background: #2E4052;
+	color: var(--accent-clr);
+	background: var(--secondary-clr);
 	transition: .25s;
 }
 
