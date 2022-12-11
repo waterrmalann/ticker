@@ -12,34 +12,53 @@ var timerTime = 0;
 var timer = null;
 var timerFlags = [];
 
-// To-Do: These two variables could be used to keep track of the exact value of time for both of these actions and calculation could be done based on that for 100% stopwatch accuracy.
-// var timerStartTime = 0;
-// var timerLastFlagTime = 0;
+// The exact-to-millisecond precise time calculated from timestamps.
+var timerTimePrecise = 0;
+// The unix timestamp for when the timer started ticking.
+// Is constantly modified and adjusted when paused/resumed so it is never really a true value.
+// NOTE: Don't rely on this to get the real time the stopwatch started.
+var timerStartTime = 0;
+// The unix timestamp for when the timer was paused.
+// Used to calculate the time delay and subtract to make sure the time calculations are perfect.
+var timerPauseTime = 0;
 
 function reprTime(ms) {
 	const d = new Date(Date.UTC(0, 0, 0, 0, 0, 0, ms));
 	return `${String(d.getUTCMinutes()).padStart(2, "0")}:${String(
 		d.getUTCSeconds()
-	).padStart(2, "0")}.${String(d.getUTCMilliseconds() / 10).padStart(2, "0")}`;
+	).padStart(2, "0")}.${String(Math.round(d.getUTCMilliseconds() / 10)).padStart(2, "0")}`;
 }
 
-function startTimer() {
+function startTimer(startFromMs) {
 	timer = setInterval(function () {
 		e_stopwatchTicker.textContent = reprTime(timerTime);
 		e_lapTicker.textContent = reprTime(timerTime - timerFlags.at(-1));
 		timerTime += 10;
+
+		timerTimePrecise = Date.now() - timerStartTime;
+		console.log(reprTime(timerTimePrecise));
 	}, 10);
+	timerStartTime = startFromMs;
+	console.log("Start Time: " + timerStartTime);
 }
 
 function pauseTimer() {
 	timerPaused = true;
 	clearInterval(timer);
 	timer = null;
+
+	timerPauseTime = Date.now();
 }
 
 function resumeTimer() {
 	timerPaused = false;
-	startTimer();
+
+	let _difference = Date.now() - timerPauseTime; // time paused
+	let _adjustedTime = timerStartTime + _difference;
+	timerStartTime = _adjustedTime;
+	startTimer(timerStartTime);
+
+	timerPauseTime = 0;
 }
 
 function setFlag() {
@@ -75,10 +94,11 @@ e_startButton.addEventListener("click", () => {
 	} else {
 		timerRunning = true;
 		timerTime = 0;
+		timerTimePrecise = 0;
 		timerFlags.push(0);
 		e_startButton.firstChild.classList.remove("fa-play");
 		e_startButton.firstChild.classList.add("fa-pause");
-		startTimer();
+		startTimer(Date.now());
 		e_resetButton.disabled = true;
 	}
 });
@@ -96,6 +116,7 @@ e_resetButton.addEventListener("click", () => {
 		clearInterval(timer);
 	}
 	timerTime = 0;
+	timerTimePrecise = 0;
 	timerFlags = [];
 	e_lapList.innerHTML = "";
 	e_stopwatchTicker.textContent = reprTime(0);
