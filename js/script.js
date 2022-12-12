@@ -31,12 +31,11 @@ function reprTime(ms) {
 
 function startTimer(startFromMs) {
 	timer = setInterval(function () {
-		e_stopwatchTicker.textContent = reprTime(timerTime);
-		e_lapTicker.textContent = reprTime(timerTime - timerFlags.at(-1));
+		e_stopwatchTicker.textContent = reprTime(timerTimePrecise);
+		e_lapTicker.textContent = reprTime(timerTimePrecise - timerFlags.at(-1));
 		timerTime += 10;
 
 		timerTimePrecise = Date.now() - timerStartTime;
-		console.log(reprTime(timerTimePrecise));
 	}, 10);
 	timerStartTime = startFromMs;
 }
@@ -60,18 +59,23 @@ function resumeTimer() {
 }
 
 function setFlag() {
-	let _flagAt = timerTime;
+	let _flagAt = timerTimePrecise;
+
 	let _span1 = document.createElement("span");
 	_span1.textContent = String(timerFlags.length).padStart(2, "0");
+
 	let _span2 = document.createElement("span");
 	_span2.textContent = reprTime(_flagAt);
+
 	let _span3 = document.createElement("span");
 	_span3.textContent = "+" + reprTime(_flagAt - timerFlags.at(-1));
+
 	let _li = document.createElement("li");
 	_li.classList.add("lap__item");
 	_li.appendChild(_span1);
 	_li.appendChild(_span2);
 	_li.appendChild(_span3);
+	
 	e_lapList.prepend(_li);
 	timerFlags.push(_flagAt);
 }
