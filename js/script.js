@@ -39,23 +39,21 @@ function startTimer(startFromMs) {
 		console.log(reprTime(timerTimePrecise));
 	}, 10);
 	timerStartTime = startFromMs;
-	console.log("Start Time: " + timerStartTime);
 }
 
 function pauseTimer() {
+	timerPauseTime = Date.now();
 	timerPaused = true;
 	clearInterval(timer);
 	timer = null;
-
-	timerPauseTime = Date.now();
 }
 
 function resumeTimer() {
 	timerPaused = false;
 
-	let _difference = Date.now() - timerPauseTime; // time paused
-	let _adjustedTime = timerStartTime + _difference;
-	timerStartTime = _adjustedTime;
+	// Adjust the time to skip the pause -> resume delay.
+	// new start time = old start time + difference between pause time and current time
+	timerStartTime = timerStartTime + (Date.now() - timerPauseTime);
 	startTimer(timerStartTime);
 
 	timerPauseTime = 0;
