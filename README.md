@@ -10,8 +10,6 @@ Fonts from [Google Fonts](https://fonts.google.com/) and Icons from [Font Awesom
 
 ![Screenshot](screenshot.png)
 
-⚠️ **Note:** *Stopwatch accuracy down to the very millisecond cannot be guaranteed on all machines because of the reliance on JavaScript's `setInterval()` but it should work fine for most cases. Time drift and slow downs are still a possibility. Though this can be fixed, and will be fixed.*
-
 ---
 
 ### 🚀 Setup
